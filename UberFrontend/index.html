@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Ride Booking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- SockJS and STOMP.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1>Uber Ride Booking System</h1>
+            <div class="header-info">
+                <span id="user-role" class="role-badge"></span>
+                <span id="user-id" class="user-id"></span>
+                <div class="connection-status">
+                    <span>Connection: </span>
+                    <span id="connection-status" class="connection-status disconnected">DISCONNECTED</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Driver Mode Content -->
+        <div id="driver-mode" class="mode-content" style="display: none;">
+            <!-- Driver Information Section -->
+            <section id="driver-info-section" class="section">
+                <h2>Driver Information</h2>
+                <div class="loading-spinner"></div>
+            </section>
+
+            <!-- Connection Status Panel -->
+            <section class="section connection-panel">
+                <h2>Connection Status</h2>
+                <div class="connection-info">
+                    <p>WebSocket Status: <span id="connection-status-text" class="connection-status status-disconnected">DISCONNECTED</span></p>
+                    <p id="connection-message" class="connection-message">Connecting to WebSocket server...</p>
+                </div>
+            </section>
+
+            <!-- Active Ride Notifications -->
+            <section class="section">
+                <h2>Active Ride Notifications</h2>
+                <div id="ride-notifications-container" class="notifications-container">
+                    <p class="empty-message">No active ride notifications. Waiting for new ride requests...</p>
+                </div>
+            </section>
+
+            <!-- Booking History -->
+            <section id="booking-history-section" class="section">
+                <h2>Booking History</h2>
+                <div id="booking-history-container" class="booking-history-container">
+                    <div class="loading-spinner"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Passenger Mode Content -->
+        <div id="passenger-mode" class="mode-content" style="display: none;">
+            <!-- Passenger Information Section -->
+            <section id="passenger-info-section" class="section">
+                <h2>Passenger Information</h2>
+                <div class="loading-spinner"></div>
+            </section>
+
+            <!-- Booking Creation Form -->
+            <section class="section">
+                <h2>Create New Booking</h2>
+                <form id="booking-form" class="booking-form" onsubmit="event.preventDefault(); PassengerHandler.handleBookingSubmit(event);">
+                    <div class="form-group">
+                        <label for="pickup-lat">Pickup Latitude *</label>
+                        <input type="number" id="pickup-lat" name="pickupLat" step="any" required 
+                               min="-90" max="90" placeholder="e.g., 40.7128">
+                    </div>
+                    <div class="form-group">
+                        <label for="pickup-lng">Pickup Longitude *</label>
+                        <input type="number" id="pickup-lng" name="pickupLng" step="any" required 
+                               min="-180" max="180" placeholder="e.g., -74.0060">
+                    </div>
+                    <div class="form-group">
+                        <label for="dropoff">Dropoff Location</label>
+                        <input type="text" id="dropoff" name="dropoff" placeholder="e.g., 123 Main St, City">
+                    </div>
+                    <div class="form-group">
+                        <label for="fare">Fare (Optional)</label>
+                        <input type="number" id="fare" name="fare" step="0.01" min="0" placeholder="e.g., 25.50">
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduled-time">Scheduled Pickup Time (Optional)</label>
+                        <input type="datetime-local" id="scheduled-time" name="scheduledTime">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Booking</button>
+                </form>
+            </section>
+
+            <!-- Active Booking Status -->
+            <section class="section">
+                <h2>Active Booking</h2>
+                <div id="active-booking-container" class="active-booking-container">
+                    <p class="empty-message">No active booking.</p>
+                </div>
+            </section>
+
+            <!-- Booking History -->
+            <section id="booking-history-section" class="section">
+                <h2>Booking History</h2>
+                <div id="booking-history-container" class="booking-history-container">
+                    <div class="loading-spinner"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Error Message Display -->
+        <div id="error-container" class="error-container" style="display: none;">
+            <div class="error-message">
+                <h3>Error</h3>
+                <p id="error-text"></p>
+                <button onclick="location.reload()" class="btn btn-primary">Reload Page</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>&copy; 2024 Uber Ride Booking System. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript Modules -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/websocket-client.js"></script>
+    <script src="js/driver-handler.js"></script>
+    <script src="js/passenger-handler.js"></script>
+
+    <!-- Main Application Script -->
+    <script>
+        /**
+         * Main Application Initialization
+         */
+        (function() {
+            // Parse and validate query parameters
+            const params = Utils.getQueryParams();
+            const validation = Utils.validateQueryParams(params);
+
+            if (!validation.isValid) {
+                // Show error with helpful examples
+                const errorContainer = document.getElementById('error-container');
+                const errorText = document.getElementById('error-text');
+                errorContainer.style.display = 'block';
+                
+                let errorMessage = validation.errors.join('\n\n');
+                errorMessage += '\n\n';
+                errorMessage += 'Please access the application with the correct URL format:\n\n';
+                errorMessage += 'Driver Mode:\n';
+                errorMessage += 'http://localhost:8000/index.html?role=driver&driverId=1\n\n';
+                errorMessage += 'Passenger Mode:\n';
+                errorMessage += 'http://localhost:8000/index.html?role=passenger&passengerId=1';
+                
+                errorText.textContent = errorMessage;
+                errorText.style.whiteSpace = 'pre-line';
+                return;
+            }
+
+            // Set user role and ID in header
+            const roleElement = document.getElementById('user-role');
+            const idElement = document.getElementById('user-id');
+            
+            roleElement.textContent = params.role.toUpperCase();
+            roleElement.className = `role-badge role-${params.role}`;
+            
+            if (params.role === 'driver') {
+                idElement.textContent = `Driver ID: ${params.driverId}`;
+                document.getElementById('driver-mode').style.display = 'block';
+                DriverHandler.init(params.driverId);
+            } else if (params.role === 'passenger') {
+                idElement.textContent = `Passenger ID: ${params.passengerId}`;
+                document.getElementById('passenger-mode').style.display = 'block';
+                PassengerHandler.init(params.passengerId);
+            }
+
+            // Handle passenger booking form submission
+            PassengerHandler.handleBookingSubmit = function(event) {
+                const form = event.target;
+                const formData = new FormData(form);
+                
+                const bookingData = {
+                    pickupLocationLatitude: formData.get('pickupLat'),
+                    pickupLocationLongitude: formData.get('pickupLng'),
+                    dropoffLocation: formData.get('dropoff') || null,
+                    fare: formData.get('fare') || null,
+                    scheduledPickupTime: formData.get('scheduledTime') || null
+                };
+
+                PassengerHandler.createBooking(bookingData);
+            };
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                WebSocketClient.disconnect();
+                if (PassengerHandler.cleanup) {
+                    PassengerHandler.cleanup();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

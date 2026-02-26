@@ -1,0 +1,648 @@
+/**
+ * Uber Ride Booking System - Styles
+ * REQ-UI-001 through REQ-UI-024
+ */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #000000;
+    --secondary-color: #1a1a1a;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --connected-color: #28a745;
+    --disconnected-color: #dc3545;
+    --connecting-color: #ffc107;
+    --status-pending: #ffc107;
+    --status-confirmed: #17a2b8;
+    --status-in-progress: #28a745;
+    --status-completed: #6c757d;
+    --status-cancelled: #dc3545;
+    --border-color: #dee2e6;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #212529;
+    --text-muted: #6c757d;
+    --spacing-unit: 1rem;
+    --border-radius: 0.5rem;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.app-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-unit) 0;
+    box-shadow: var(--box-shadow);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-unit);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-unit);
+}
+
+.app-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-unit);
+    flex-wrap: wrap;
+}
+
+.role-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.role-badge.role-driver {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.role-badge.role-passenger {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.user-id {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.connection-status {
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius);
+}
+
+.connection-status.status-connected {
+    background-color: var(--connected-color);
+    color: white;
+}
+
+.connection-status.status-disconnected {
+    background-color: var(--disconnected-color);
+    color: white;
+}
+
+.connection-status.status-connecting {
+    background-color: var(--connecting-color);
+    color: var(--text-color);
+}
+
+/* Main Content */
+.app-main {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--spacing-unit);
+}
+
+.mode-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit);
+}
+
+/* Section Styles */
+.section {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-unit);
+    box-shadow: var(--box-shadow);
+}
+
+.section h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-unit);
+    color: var(--primary-color);
+}
+
+.section h3 {
+    font-size: 1.1rem;
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+    color: var(--secondary-color);
+}
+
+/* Info Card */
+.info-card {
+    background-color: var(--bg-color);
+    padding: var(--spacing-unit);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.info-card p {
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+.info-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* Connection Panel */
+.connection-panel {
+    background-color: var(--bg-color);
+}
+
+.connection-info {
+    color: var(--text-muted);
+}
+
+.connection-info p {
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+.connection-info p:last-child {
+    margin-bottom: 0;
+}
+
+.connection-message {
+    font-size: 0.875rem;
+    margin-top: calc(var(--spacing-unit) * 0.5);
+    font-style: italic;
+}
+
+/* Notifications Container */
+.notifications-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit);
+    min-height: 100px;
+}
+
+.empty-message {
+    color: var(--text-muted);
+    text-align: center;
+    padding: var(--spacing-unit);
+    font-style: italic;
+}
+
+/* Ride Notification Card */
+.ride-notification-card {
+    background-color: #fff3cd;
+    border: 2px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-unit);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+.notification-header h4 {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.timestamp {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.notification-body {
+    margin-bottom: var(--spacing-unit);
+}
+
+.notification-body p {
+    margin-bottom: calc(var(--spacing-unit) * 0.25);
+}
+
+.notification-actions {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 0.5);
+}
+
+/* Booking Card */
+.booking-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-unit);
+}
+
+.booking-card.active {
+    border-color: var(--info-color);
+    border-width: 2px;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-unit);
+}
+
+.booking-body {
+    margin-bottom: var(--spacing-unit);
+}
+
+.booking-body p {
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+.booking-actions {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 0.5);
+    flex-wrap: wrap;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: calc(var(--border-radius) * 0.5);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.status-pending {
+    background-color: var(--status-pending);
+    color: var(--text-color);
+}
+
+.status-badge.status-confirmed {
+    background-color: var(--status-confirmed);
+    color: white;
+}
+
+.status-badge.status-in-progress {
+    background-color: var(--status-in-progress);
+    color: white;
+}
+
+.status-badge.status-completed {
+    background-color: var(--status-completed);
+    color: white;
+}
+
+.status-badge.status-cancelled {
+    background-color: var(--status-cancelled);
+    color: white;
+}
+
+/* Form Styles */
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 0.25);
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: calc(var(--spacing-unit) * 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--border-radius) * 0.5);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn {
+    padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
+    border: none;
+    border-radius: calc(var(--border-radius) * 0.5);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.btn-accept {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-accept:hover {
+    background-color: #218838;
+}
+
+.btn-reject,
+.btn-cancel {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.btn-reject:hover,
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+.btn-refresh {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.btn-refresh:hover {
+    background-color: #138496;
+}
+
+.btn-small {
+    padding: calc(var(--spacing-unit) * 0.25) calc(var(--spacing-unit) * 0.5);
+    font-size: 0.875rem;
+}
+
+/* Table Styles */
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-unit);
+}
+
+.booking-table thead {
+    background-color: var(--bg-color);
+}
+
+.booking-table th {
+    padding: calc(var(--spacing-unit) * 0.75);
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--secondary-color);
+}
+
+.booking-table td {
+    padding: calc(var(--spacing-unit) * 0.75);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.booking-table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+.booking-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: var(--spacing-unit) auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Notification Toast */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: var(--spacing-unit);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-width: 400px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-out;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-info {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.notification-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.notification-error {
+    background-color: var(--error-color);
+    color: white;
+}
+
+/* Error Container */
+.error-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.error-message {
+    background-color: var(--card-bg);
+    padding: calc(var(--spacing-unit) * 2);
+    border-radius: var(--border-radius);
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.error-message h3 {
+    color: var(--error-color);
+    margin-bottom: var(--spacing-unit);
+}
+
+.error-message p {
+    margin-bottom: var(--spacing-unit);
+    color: var(--text-muted);
+    white-space: pre-line;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    background-color: var(--bg-color);
+    padding: var(--spacing-unit);
+    border-radius: calc(var(--border-radius) * 0.5);
+    border: 1px solid var(--border-color);
+}
+
+/* Footer */
+.app-footer {
+    background-color: var(--secondary-color);
+    color: white;
+    text-align: center;
+    padding: var(--spacing-unit);
+    margin-top: auto;
+}
+
+.app-footer p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .app-main {
+        padding: calc(var(--spacing-unit) * 0.5);
+    }
+
+    .section {
+        padding: calc(var(--spacing-unit) * 0.75);
+    }
+
+    .booking-table {
+        font-size: 0.875rem;
+    }
+
+    .booking-table th,
+    .booking-table td {
+        padding: calc(var(--spacing-unit) * 0.5);
+    }
+
+    .notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .notification-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .section h2 {
+        font-size: 1.1rem;
+    }
+
+    .booking-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
